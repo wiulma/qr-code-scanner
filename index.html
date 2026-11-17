@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- viewport-fit=cover: let the app draw under the notch / home indicator (use safe-area insets in CSS) -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="description" content="Camera + QR code scanning PWA demo" />
+    <meta name="theme-color" content="#111827" />
+
+    <!-- iOS: run full screen when launched from the home screen -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="QR Scanner" />
+
+    <!-- favicon, apple-touch-icon and manifest links are injected by vite-plugin-pwa -->
+    <title>QR Scanner Demo</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
