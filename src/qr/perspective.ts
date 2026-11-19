@@ -1,8 +1,4 @@
 /** 3×3 matrix, row-major: [a, b, c, d, e, f, g, h, i] */
-export type Matrix = number[];
-
-/** 4 corners in order: top-left, top-right, bottom-right, bottom-left */
-export type Quad = [Point, Point, Point, Point];
 
 /** Transform mapping the unit square onto `quad` */
 function squareToQuad([p0, p1, p2, p3]: Quad): Matrix {
