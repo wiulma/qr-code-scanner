@@ -66,87 +66,55 @@ Code changes reload on the phone automatically. The ngrok URL changes every time
 
 ### Troubleshooting
 
-| Problem | Fix |
-| --- | --- |
-| `Blocked request. This host is not allowed.` | Check that the URL's domain is in `server.allowedHosts` in `vite.config.ts`, then restart `pnpm dev`. |
-| `ERR_NGROK_8012` / connection refused | `pnpm dev` isn't running, or ngrok points to the wrong port. Use the port Vite prints. |
-| The camera permission prompt never appears | Make sure the URL starts with `https://`. |
-| `BarcodeDetector is not defined` | The browser doesn't support the native [`BarcodeDetector`](https://developer.mozilla.org/en-US/docs/Web/API/BarcodeDetector) API (for example Firefox or Safari on iOS). Test with Chrome on Android. |
+| Problem                                      | Fix                                                                                                                                                                                                   |
+| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Blocked request. This host is not allowed.` | Check that the URL's domain is in `server.allowedHosts` in `vite.config.ts`, then restart `pnpm dev`.                                                                                                 |
+| `ERR_NGROK_8012` / connection refused        | `pnpm dev` isn't running, or ngrok points to the wrong port. Use the port Vite prints.                                                                                                                |
+| The camera permission prompt never appears   | Make sure the URL starts with `https://`.                                                                                                                                                             |
+| `BarcodeDetector is not defined`             | The browser doesn't support the native [`BarcodeDetector`](https://developer.mozilla.org/en-US/docs/Web/API/BarcodeDetector) API (for example Firefox or Safari on iOS). Test with Chrome on Android. |
+
+## Debugging on the phone with DevTools
+
+You can connect your computer's DevTools to the page running on the phone: console, network, elements, breakpoints, and the service worker and cache in the **Application** panel. Both setups need a USB cable.
+
+### Android (Chrome)
+
+Works from macOS, Windows or Linux with desktop Chrome.
+
+1. On the phone, turn on developer mode: **Settings → About phone → Software information**, then tap **Build number** seven times. The exact menu path varies by manufacturer.
+2. In **Settings → Developer options**, turn on **USB debugging**.
+3. Connect the phone with a USB cable and accept the **Allow USB debugging?** prompt on the phone.
+4. Open the app on the phone in Chrome (the ngrok URL, or `localhost` as described below).
+5. On the computer, open `chrome://inspect/#devices` in Chrome. Keep **Discover USB devices** checked.
+6. Your phone appears with its open tabs. Click **inspect** under the tab with the app.
+
+A DevTools window opens with a live mirror of the phone screen. You can click and type in the mirror, too.
+
+**Skip ngrok with port forwarding.** Chrome can forward a port on the phone to your computer through the USB cable. Since `localhost` counts as a secure page, the camera works without ngrok:
+
+1. In `chrome://inspect/#devices`, click **Port forwarding…**.
+2. Add port `5173` → `localhost:5173`, check **Enable port forwarding**, and click **Done**.
+3. With `pnpm dev` running, open `http://localhost:5173` in Chrome on the phone.
+
+**Installed PWA.** When the app is installed on the home screen, it still appears in `chrome://inspect` while it is open, and you inspect it the same way.
+
+### iPhone (Safari)
+
+Needs a Mac with Safari. Apple doesn't offer Web Inspector on Windows or Linux.
+
+1. On the iPhone, open **Settings → Apps → Safari → Advanced** (on iOS 17 and earlier: **Settings → Safari → Advanced**) and turn on **Web Inspector**.
+2. On the Mac, open Safari, go to **Safari → Settings → Advanced**, and check **Show features for web developers** (on older versions: **Show Develop menu in menu bar**).
+3. Connect the iPhone to the Mac with a USB cable. If asked, tap **Trust** on the iPhone.
+4. Open the ngrok URL on the iPhone in Safari.
+5. On the Mac, open the **Develop** menu in Safari, choose your iPhone, then the page with the app.
+
+Web Inspector opens and shows the console, network, elements and storage of the page on the iPhone.
+
+Notes:
+
+- To connect without a cable after the first time, choose your iPhone in the **Develop** menu and select **Connect via Network**. The iPhone and the Mac must be on the same Wi-Fi network.
+- An app installed on the home screen also appears in the **Develop** menu while it is open.
+- Every browser on iOS uses Safari's engine (WebKit). Chrome on iOS can be inspected the same way, from the Mac's Safari **Develop** menu. Chrome's `chrome://inspect` doesn't work with iPhones.
+- Safari has no port forwarding, so on iPhone you still need the ngrok URL.
 
 ---
-
-# React + TypeScript + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
-
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```

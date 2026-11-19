@@ -1,5 +1,6 @@
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 import "./scanner.css";
+import { createDetect } from "./qr/detect";
 
 type Props = {
   onCode: (code: string) => void;
@@ -12,20 +13,20 @@ export const QRcodeScanner = ({ onCode }: Props) => {
   const onDetected = useEffectEvent((code: string) => onCode(code));
 
   useEffect(() => {
-    console.log("effect start");
+    let detect: Detect | null = null;
     let stream: MediaStream | null = null;
     let cancelled = false;
     let timeoutId = 0;
-    const detector = new BarcodeDetector({ formats: ["qr_code"] });
+    // const detector = new BarcodeDetector({ formats: ["qr_code"] });
 
     const scan = async () => {
       const video = videoRef.current;
       if (!video || cancelled) return;
       if (video.readyState >= 2) {
         try {
-          const codes = await detector.detect(video);
-          if (codes.length > 0) {
-            onDetected(codes[0].rawValue);
+          const code = await detect!(video); /*detector.detect(video);*/
+          if (code) {
+            onDetected(code);
             return;
           }
         } catch (e) {
@@ -48,7 +49,11 @@ export const QRcodeScanner = ({ onCode }: Props) => {
         video.srcObject = s;
         return video.play();
       })
-      .then(scan)
+      .then(createDetect)
+      .then((d: Detect) => {
+        detect = d;
+        scan();
+      })
       .catch((e) => setError(e.message));
 
     return () => {

@@ -1,5 +1,5 @@
 .scanner-container {
-  padding: 3rem 0;
+  padding: 5vw 0;
 }
 
 .qr-scanner {
@@ -7,6 +7,7 @@
   aspect-ratio: 1;
   overflow: hidden;
   width: min(80vw, 400px);
+  max-height: 80vh;
   margin: 0 auto;
   border-radius: 3rem;
   background: #000;
